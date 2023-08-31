@@ -13,16 +13,55 @@ func main() {
 }
 
 func voc() {
-	zh, en := readRaw1()
+	path := chooseVoc()
+	zh, en := readRaw1(path)
 	switch readAction() {
 	case "1":
 		practice(zh, en)
 	case "2":
 		zhToEn(zh, en)
 	/* case "3":
-		enToZh(zh, en) */
+	enToZh(zh, en) */
 	default:
 		fmt.Println("unknown action.")
+	}
+}
+
+func chooseVoc() (path string) {
+	for {
+		fmt.Println("1: 初中-乱序")
+		fmt.Println("2: 高中-乱序")
+		fmt.Println("3: 四级-乱序")
+		fmt.Println("4: 六级-乱序")
+		fmt.Println("5: 考研-乱序")
+		fmt.Println("6: 托福-乱序")
+		fmt.Println("7: SAT-乱序")
+		sIn := bufio.NewScanner(os.Stdin)
+		sIn.Scan()
+		choose := sIn.Text()
+		switch choose {
+		case "1":
+			path = "english-vocabulary/1.初中-乱序.txt"
+			return
+		case "2":
+			path = "english-vocabulary/2.高中-乱序.txt"
+			return
+		case "3":
+			path = "english-vocabulary/3.四级-乱序.txt"
+			return
+		case "4":
+			path = "english-vocabulary/4.六级-乱序.txt"
+			return
+		case "5":
+			path = "english-vocabulary/5.考研-乱序.txt"
+			return
+		case "6":
+			path = "english-vocabulary/6.托福-乱序.txt"
+			return
+		case "7":
+			path = "english-vocabulary/7.SAT-乱序.txt"
+			return
+		}
 	}
 }
 
@@ -41,8 +80,7 @@ func readAction() (action string) {
 	return
 }
 
-func readRaw1() (zh, en []string) {
-	path := "english-vocabulary/1.初中-乱序.txt"
+func readRaw1(path string) (zh, en []string) {
 	f, err := os.Open(path)
 	if err != nil {
 		panic(err)
@@ -50,6 +88,7 @@ func readRaw1() (zh, en []string) {
 	defer f.Close()
 	scaner := bufio.NewScanner(f)
 
+  count := 1
 	for scaner.Scan() {
 		if err = scaner.Err(); err != nil {
 			panic(err)
@@ -58,9 +97,11 @@ func readRaw1() (zh, en []string) {
 		before, after, ok := strings.Cut(raw, "\t")
 		if ok {
 			en = append(en, before)
-      zh = append(zh, strings.Trim(after, " "))
+			zh = append(zh, strings.Trim(after, " "))
 		}
+    count++
 	}
+  fmt.Println(count)
 	return
 }
 
